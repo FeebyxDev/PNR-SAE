@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" stylesheets="@../css/Buttons.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1028.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.fbyx.controller.AdminController">
+   <children>
+      <Label text="Bienvenue sur l'intreface d'administration">
+         <font>
+            <Font size="27.0" />
+         </font>
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" top="15.0" />
+         </VBox.margin>
+      </Label>
+      <HBox alignment="TOP_CENTER" prefHeight="0.0">
+         <children>
+            <MFXButton fx:id="modifUsers" styleClass="outline-button" text="Créer / modifier des utilisateurs" textAlignment="CENTER">
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </MFXButton>
+            <MFXButton styleClass="outline-button" text="Créer / modifier des roles" textAlignment="CENTER">
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </MFXButton>
+         </children>
+      </HBox>
+      <StackPane fx:id="contentAdmin" alignment="TOP_CENTER" prefHeight="450.0" prefWidth="600.0" />
+   </children>
+</VBox>
