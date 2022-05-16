@@ -46,7 +46,7 @@
                   </MFXComboBox>
                   <HBox alignment="CENTER" prefHeight="75.0" prefWidth="200.0">
                      <children>
-                        <MFXButton id="custom" buttonType="RAISED" minHeight="27.0" minWidth="70.0" text="Supprimer">
+                        <MFXButton fx:id="supprUser" id="supprUser" buttonType="RAISED" minHeight="27.0" minWidth="70.0" text="Supprimer">
                            <HBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </HBox.margin>
@@ -54,7 +54,7 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
                         </MFXButton>
-                        <MFXButton id="custom" buttonType="RAISED" minHeight="27.0" minWidth="70.0" text="Sauvegarder">
+                        <MFXButton fx:id="saveUser" id="saveUser" buttonType="RAISED" minHeight="27.0" minWidth="70.0" text="Sauvegarder">
                            <HBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </HBox.margin>

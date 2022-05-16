@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import fr.fbyx.App;
+
 public class Animal {
     private String animal;
     private String request;
@@ -14,7 +16,7 @@ public class Animal {
     }
 
     public ResultSet makeARequest() {
-        MysqlConnect connect = new MysqlConnect();
+        MysqlConnect connect = App.getMysqlConncetion();
         ResultSet res = null;
         try {
             PreparedStatement statement = connect.connect().prepareStatement(this.request);

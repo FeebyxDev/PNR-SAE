@@ -18,15 +18,17 @@ public class MysqlConnect {
     // init properties object
     private Properties properties;
 
+    public Properties setProperties(String user, String password) {
+        properties = new Properties();
+        properties.setProperty("user", user);
+        properties.setProperty("password", password);
+        properties.setProperty("MaxPooledStatements", MAX_POOL);
+        return this.properties;
+    }
+
     // create properties
     private Properties getProperties() {
-        if (properties == null) {
-            properties = new Properties();
-            properties.setProperty("user", USERNAME);
-            properties.setProperty("password", PASSWORD);
-            properties.setProperty("MaxPooledStatements", MAX_POOL);
-        }
-        return properties;
+        return this.properties;
     }
 
     // connect database

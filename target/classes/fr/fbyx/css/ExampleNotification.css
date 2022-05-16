@@ -55,3 +55,9 @@
 	-fx-background-radius: 5;
 	-fx-min-height: 15;
 }
+
+.error {
+	-fx-background-color: -mfx-red;
+	-fx-background-radius: 5;
+	-fx-min-height: 15;
+}

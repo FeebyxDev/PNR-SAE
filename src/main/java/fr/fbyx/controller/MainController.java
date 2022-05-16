@@ -34,25 +34,7 @@ public class MainController implements Initializable {
 	private double xOffset;
 	private double yOffset;
 	private final ToggleGroup toggleGroup;
-	private final boolean isDarkTheme;
-
-    @FXML
-    private MFXFontIcon closeIcon;
-
-    @FXML
-	private MFXFontIcon minimizeIcon;
-
-    @FXML
-	private MFXFontIcon alwaysOnTopIcon;
-
-	@FXML
-	private MFXFontIcon toggleSize;
-
-    @FXML
-	public AnchorPane rootPane;
-    
-    @FXML
-	private HBox windowHeader;
+	   
 
     @FXML
 	private VBox navBar;
@@ -64,42 +46,15 @@ public class MainController implements Initializable {
 		return contentPane;
 	}
 
-    public MainController(Stage stage) {
-        this.stage = stage;
-		this.isDarkTheme = App.isDarkTheme();
+    public MainController() {
+        this.stage = App.getStage();
         this.toggleGroup = new ToggleGroup();
 		ToggleButtonsUtil.addAlwaysOneSelectedSupport(toggleGroup);
     }
     
     @Override
     public void initialize(URL location, ResourceBundle ressource) {
-		if(isDarkTheme) {
-			System.out.println("Dark theme Mode activated");
-			
-		}
-
-        closeIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> Platform.exit());
-        minimizeIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ((Stage) rootPane.getScene().getWindow()).setIconified(true));
-
-		toggleSize.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-			boolean newVal = !stage.isMaximized();
-			toggleSize.pseudoClassStateChanged(PseudoClass.getPseudoClass("maximized"), newVal);
-			stage.setMaximized(newVal);
-		});
-
-        windowHeader.setOnMousePressed(event -> {
-			xOffset = stage.getX() - event.getScreenX();
-			yOffset = stage.getY() - event.getScreenY();
-		});
-		windowHeader.setOnMouseDragged(event -> {
-			if(stage.isMaximized()) {
-				toggleSize.pseudoClassStateChanged(PseudoClass.getPseudoClass("maximized"), false);
-				stage.setMaximized(false);
-			}
-			stage.setX(event.getScreenX() + xOffset);
-			stage.setY(event.getScreenY() + yOffset);
-		});
-
+	
 		initializeLoader();
     }
 

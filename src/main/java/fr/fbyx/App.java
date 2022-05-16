@@ -1,6 +1,7 @@
 package fr.fbyx;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,8 +10,11 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 
 import fr.fbyx.controller.*;
+import fr.fbyx.model.MysqlConnect;
+import io.github.palexdev.materialfx.notifications.MFXNotificationSystem;
 
 /**
  * JavaFX App
@@ -20,17 +24,27 @@ public class App extends Application {
     private static Scene scene;
     private static Stage stage;
     private static boolean isDarkTheme = true;
+    private static ParentController parentController;
     private static LoginController logController;
     private static MainController mainController;
+    private static MysqlConnect mysqlConncetion;
 
     @Override
     public void start(Stage stage) throws IOException {
+        Platform.runLater(() -> {
+			MFXNotificationSystem.instance().initOwner(App.getStage());
+		});
         this.stage = stage;
-        // this.logController = new LoginController(stage);
-        this.mainController = new MainController(stage);
+        
+        this.parentController = new ParentController(stage);
+        // this.mainController = new MainController(stage);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/" + "Main" + ".fxml"));
-        fxmlLoader.setControllerFactory(c -> this.mainController);
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/" + "Parent" + ".fxml"));
+        // FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/" + "Main" + ".fxml"));
+
+        fxmlLoader.setControllerFactory(c -> this.parentController);
+        // fxmlLoader.setControllerFactory(c -> this.mainController);
+
         Parent root = fxmlLoader.load();
         scene = new Scene((root), 1650, 900);
         stage.setMinWidth(1280);
@@ -64,6 +78,18 @@ public class App extends Application {
 
     public static boolean isDarkTheme() {
         return isDarkTheme;
+    }
+
+    public static ParentController getParentController() {
+        return parentController;
+    }
+
+    public static void setMysqlConncetion(MysqlConnect con) {
+        mysqlConncetion = con;
+    }
+
+    public static MysqlConnect getMysqlConncetion() {
+        return mysqlConncetion;
     }
 
     // <MFXFontIcon fx:id="alwaysOnTopIcon" description="mfx-circle" size="15.0" styleClass="always-on-top-icon" />
