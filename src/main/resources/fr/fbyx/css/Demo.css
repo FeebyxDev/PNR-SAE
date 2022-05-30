@@ -33,30 +33,33 @@
  * Window Header
 **************************************************/
 .rootPane .close-icon {
-	-mfx-color: -mfx-red;
+	-mfx-color: -pnr-headbtn;
 	-fx-opacity: 0.5;
 }
 
 .rootPane .close-icon:hover {
 	-fx-opacity: 1.0;
+	-mfx-color: -mfx-red;
 }
 
 .rootPane .toggle-size-icon {
-	-mfx-color: #bacb00;
+	-mfx-color: -pnr-headbtn;
 	-fx-opacity: 0.5;
 }
 
 .rootPane .toggle-size-icon:hover {
 	-fx-opacity: 1.0;
+	-mfx-color: #bacb00;
 }
 
 .rootPane .minimize-icon {
-	-mfx-color: #ffbf37;
+	-mfx-color: -pnr-headbtn;
 	-fx-opacity: 0.5;
 }
 
 .rootPane .minimize-icon:hover {
 	-fx-opacity: 1.0;
+	-mfx-color: #ffbf37;
 }
 
 .rootPane .always-on-top-icon {
@@ -141,16 +144,16 @@
 }
 
 .menu-btn {
-	-fx-background-color: transparent;
-	-fx-border-color: #fff;
+	-fx-background-color: rgba(0, 0, 0, 0.1);
+	-fx-border-color: transparent;
 	-fx-background-radius: 3;
 	-fx-border-radius: 3;
-	-fx-text-fill: #000;
-	transition: .5s;
+	-fx-text-fill: #fff;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.12, -1.0, 2.0);
 }
 
 .menu-btn:hover {
-	-fx-background-color: #fff;
+	-fx-background-color: -back-gradient;
 	-fx-font-weight: bold;
 	-fx-background-radius: 5;
 }

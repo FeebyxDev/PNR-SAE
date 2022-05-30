@@ -5,7 +5,6 @@ module fr.fbyx {
     requires javafx.fxml;
     requires java.sql;
     
-
     opens fr.fbyx to javafx.fxml;
     opens fr.fbyx.controller to javafx.fxml;
     exports fr.fbyx;

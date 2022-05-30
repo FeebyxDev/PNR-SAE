@@ -18,83 +18,110 @@
   ~ along with MaterialFX.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXCheckListView?>
 <?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.fbyx.controller.NvObsController">
    <children>
-      <MFXFilterComboBox fx:id="filterCombo" floatingText="Espèce" prefWidth="300.0" />
-      <VBox maxWidth="380.0" prefHeight="110.0" prefWidth="75.0">
+      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0">
          <children>
-            <Label text="Coordonnées (Lambert):">
-               <VBox.margin>
-                  <Insets left="20.0" right="20.0" top="20.0" />
-               </VBox.margin>
+            <MFXFilterComboBox fx:id="especeCombo" floatingText="Espèce" prefWidth="300.0" />
+            <VBox maxWidth="380.0" prefHeight="110.0" prefWidth="75.0">
+               <children>
+                  <Label text="Coordonnées (Lambert):">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <HBox maxWidth="380.0" prefHeight="100.0" prefWidth="100.0">
+                     <children>
+                        <MFXTextField floatMode="BORDER" floatingText="Coordonnée X" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+                           </HBox.margin>
+                        </MFXTextField>
+                        <MFXTextField floatMode="BORDER" floatingText="Coordonnée Y" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+                           </HBox.margin>
+                        </MFXTextField>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox maxWidth="380.0" prefHeight="110.0" prefWidth="75.0">
+               <children>
+                  <Label text="Date &amp; Heure :">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <HBox maxWidth="380.0" prefHeight="100.0" prefWidth="100.0">
+                     <children>
+                        <MFXDatePicker id="custDatePicker" fx:id="custDatePicker" closePopupOnChange="false" floatMode="INLINE" floatingText="Date observation" maxHeight="39.0" minHeight="-Infinity" prefHeight="39.0" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+                           </HBox.margin>
+                        </MFXDatePicker>
+                        <MFXTextField floatMode="BORDER" floatingText="Heure" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+                           </HBox.margin>
+                        </MFXTextField>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Label text="Observateurs :">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <HBox maxWidth="380.0" prefHeight="100.0" prefWidth="100.0">
-               <children>
-                  <MFXTextField floatMode="BORDER" floatingText="Coordonnée X" prefWidth="150.0">
-                     <HBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
-                     </HBox.margin>
-                  </MFXTextField>
-                  <MFXTextField floatMode="BORDER" floatingText="Coordonnée Y" prefWidth="150.0">
-                     <HBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
-                     </HBox.margin>
-                  </MFXTextField>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox maxWidth="380.0" prefHeight="110.0" prefWidth="75.0">
-         <children>
-            <Label text="Date &amp; Heure :">
+            <MFXCheckListView fx:id="observateurList" prefHeight="300.0" prefWidth="300.0">
                <VBox.margin>
-                  <Insets left="20.0" right="20.0" top="20.0" />
+                  <Insets top="20.0" />
                </VBox.margin>
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Label>
-            <HBox maxWidth="380.0" prefHeight="100.0" prefWidth="100.0">
-               <children>
-                  <MFXDatePicker id="custDatePicker" fx:id="custDatePicker" closePopupOnChange="false" floatMode="INLINE" floatingText="Date observation" maxHeight="39.0" minHeight="-Infinity" prefHeight="39.0" prefWidth="150.0">
-                     <HBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
-                     </HBox.margin>
-                  </MFXDatePicker>
-                  <MFXTextField floatMode="BORDER" floatingText="Heure" prefWidth="150.0">
-                     <HBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
-                     </HBox.margin>
-                  </MFXTextField>
-               </children>
-            </HBox>
+            </MFXCheckListView>
+            <MFXButton fx:id="validerBtn" style="-fx-background-color: -back-gradient; -fx-border-color: -mfx-hidden;" text="Valider">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+               </padding>
+               <styleClass>
+                  <String fx:value="medium-btn" />
+                  <String fx:value="mfx-button" />
+               </styleClass>
+            </MFXButton>
          </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <stylesheets>
+            <URL value="@../css/TextFields.css" />
+            <URL value="@../css/Pickers.css" />
+            <URL value="@../css/ComboBoxes.css" />
+            <URL value="@../css/ListViews.css" />
+            <URL value="@../css/Buttons.css" />
+         </stylesheets>
       </VBox>
-      <Label text="Observateurs :">
-         <font>
-            <Font size="17.0" />
-         </font>
-      </Label>
-      <MFXCheckListView fx:id="checkList" prefHeight="200.0" prefWidth="170.0">
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </MFXCheckListView>
+      <VBox fx:id="FillAttributes" alignment="TOP_CENTER" prefWidth="100.0" />
    </children>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
-</VBox>
+</HBox>

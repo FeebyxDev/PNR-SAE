@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -11,14 +12,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" style="-fx-background-color: -pnr-green;" stylesheets="@../css/MFXColors.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.fbyx.controller.LoginController">
+<VBox alignment="CENTER" style="-fx-background-color: -mfx-hidden;" styleClass="font-fam" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.fbyx.controller.LoginController">
    <children>
-      <Label text="Bienvenue sur l'application de gestion des données du PNR">
+      <Label styleClass="font-fam" text="Bienvenue sur l'application de gestion des données du PNR">
          <font>
             <Font name="Roboto Medium" size="25.0" />
          </font>
       </Label>
-      <Label text="Connectez-vous pour consulter et ajouter des données !">
+      <Label styleClass="font-fam" text="Connectez-vous pour consulter et ajouter des données !">
          <font>
             <Font name="Roboto Medium" size="17.0" />
          </font>
@@ -43,19 +44,19 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </HBox.margin>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <MFXTextField fx:id="userField" floatMode="BORDER" floatingText="Username" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="225.0">
+                  <MFXTextField fx:id="userField" floatMode="BORDER" floatingText="Username" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="400.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXPasswordField fx:id="passField" floatMode="BORDER" floatingText="Password" minWidth="-Infinity" prefWidth="225.0">
+                  <MFXPasswordField fx:id="passField" floatMode="BORDER" floatingText="Password" minWidth="-Infinity" prefWidth="400.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </MFXPasswordField>
-                  <MFXButton id="custom" fx:id="loginBtn" minHeight="27.0" minWidth="70.0" text="Login">
+                  <MFXButton id="custom" fx:id="loginBtn" minHeight="35.0" minWidth="100.0" text="Login">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -71,4 +72,9 @@
    <padding>
       <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
    </padding>
+   <stylesheets>
+      <URL value="@../css/TextFields.css" />
+      <URL value="@../css/Buttons.css" />
+      <URL value="@../css/Demo.css" />
+   </stylesheets>
 </VBox>

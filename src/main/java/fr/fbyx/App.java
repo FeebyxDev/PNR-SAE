@@ -13,14 +13,13 @@ import java.net.URL;
 import java.sql.Connection;
 
 import fr.fbyx.controller.*;
-import fr.fbyx.model.MysqlConnect;
 import io.github.palexdev.materialfx.notifications.MFXNotificationSystem;
 
 /**
  * JavaFX App
  */
 public class App extends Application {
-
+    
     private static Scene scene;
     private static Stage stage;
     private static boolean isDarkTheme = true;
@@ -28,9 +27,16 @@ public class App extends Application {
     private static LoginController logController;
     private static MainController mainController;
     private static MysqlConnect mysqlConncetion;
+    public static App rootapp;
+    private static boolean isAdmin = false;
+    
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
+        this.rootapp = this;
         Platform.runLater(() -> {
 			MFXNotificationSystem.instance().initOwner(App.getStage());
 		});
@@ -72,9 +78,6 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/" + fxml + ".fxml"));
         return fxmlLoader.load();
     }
-    public static void main(String[] args) {
-        launch();
-    }
 
     public static boolean isDarkTheme() {
         return isDarkTheme;
@@ -92,6 +95,30 @@ public class App extends Application {
         return mysqlConncetion;
     }
 
+    public static void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public static boolean isAdmin() {
+        return isAdmin;
+    }
+
     // <MFXFontIcon fx:id="alwaysOnTopIcon" description="mfx-circle" size="15.0" styleClass="always-on-top-icon" />
+
+    public void restartApp() {
+        // App.getStage().close();
+        App.stage.close();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    App.rootapp.start(new Stage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        
+    }
 
 }

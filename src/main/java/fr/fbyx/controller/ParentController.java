@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import fr.fbyx.App;
+import fr.fbyx.MysqlConnect;
 import io.github.palexdev.materialfx.font.MFXFontIcon;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
@@ -24,6 +25,9 @@ public class ParentController implements Initializable {
 	private double xOffset;
 	private double yOffset;
 	private final boolean isDarkTheme;
+
+    @FXML
+    private MFXFontIcon logoutIcon;
 
     @FXML
     private MFXFontIcon closeIcon;
@@ -56,6 +60,11 @@ public class ParentController implements Initializable {
 			System.out.println("Dark theme Mode activated");
 			
 		}
+
+        logoutIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            App.getMysqlConncetion().disconnect();
+            App.rootapp.restartApp();
+        });
 
         closeIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> Platform.exit());
         minimizeIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ((Stage) rootPane.getScene().getWindow()).setIconified(true));

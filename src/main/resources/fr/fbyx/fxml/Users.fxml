@@ -39,7 +39,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </MFXPasswordField>
-                  <MFXComboBox fx:id="nBFCombo" floatMode="BORDER" floatingText="Rôle" prefWidth="200.0">
+                  <MFXComboBox fx:id="rolesCombo" floatMode="BORDER" floatingText="Rôle" prefWidth="200.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>

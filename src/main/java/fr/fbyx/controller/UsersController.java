@@ -7,9 +7,10 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import fr.fbyx.App;
+import fr.fbyx.MysqlConnect;
 import fr.fbyx.Notification;
-import fr.fbyx.model.MysqlConnect;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXListView;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -21,6 +22,9 @@ import javafx.scene.input.MouseEvent;
 
 public class UsersController implements Initializable {
     
+    private MysqlConnect connect = App.getMysqlConncetion();
+    private String prefix = "£pnr";
+
     @FXML
     private MFXListView userList;
 
@@ -36,19 +40,32 @@ public class UsersController implements Initializable {
     @FXML
     private MFXButton supprUser;
 
+    @FXML
+    private MFXComboBox rolesCombo;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            MysqlConnect connect = App.getMysqlConncetion();
-            ResultSet res = connect.connect().prepareStatement("SELECT * FROM vue_pnr_users;").executeQuery();
+            ResultSet res = connect.getConnexion().prepareStatement("SELECT * FROM vue_pnr_users;").executeQuery();
             while (res.next()) {
-                userList.getItems().add(res.getString("user"));
+                userList.getItems().add(res.getString("user").split("£")[0]);
             }
             connect.disconnect();
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
 
+        try {
+            ResultSet res = connect.getConnexion().prepareStatement("SELECT * FROM vue_pnr_roles;").executeQuery();
+            while (res.next()) {
+                rolesCombo.getItems().add(res.getString("user"));
+            }
+
+            connect.disconnect();
+            rolesCombo.selectFirst();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
 
 
         /*Model.users.forEach(user -> {
@@ -59,9 +76,8 @@ public class UsersController implements Initializable {
             if (userList.getSelectionModel().getSelectedValues().get(0) != null) {
                 String user = userList.getSelectionModel().getSelectedValues().get(0).toString();
                 System.out.println(user);
-                MysqlConnect connect2 = new MysqlConnect();
                 try {
-                    connect2.connect().prepareStatement("DROP USER " + user + "@localhost;").execute();
+                    connect.getConnexion().prepareStatement("DROP USER " + user + prefix + "@localhost;").execute();
                     userList.getItems().remove(user);
                     MFXNotificationSystem.instance()
                         .setPosition(NotificationPos.TOP_RIGHT)
@@ -69,7 +85,7 @@ public class UsersController implements Initializable {
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
-                connect2.disconnect();
+                connect.disconnect();
             }
         });
 
@@ -77,8 +93,9 @@ public class UsersController implements Initializable {
             if (userTextField.getText() != null) {
                 String user = userTextField.getText();
                 String pass = passTextField.getText();
-                System.out.println(pass.length());
-                System.out.println(user.length());
+                String role = rolesCombo.getSelectionModel().getSelectedItem().toString();
+                // System.out.println(pass.length());
+                // System.out.println(user.length());
                 if(pass.length() < 5 || user.length() < 2) {
                     MFXNotificationSystem.instance()
                     .setPosition(NotificationPos.TOP_RIGHT)
@@ -86,10 +103,10 @@ public class UsersController implements Initializable {
                     System.err.println("Le mot de passe doit contenir au moins 5 caractères et le nom d'utilisateur au moins 2 caractères");
                     // throw new IllegalArgumentException("Le mot de passe doit contenir au moins 5 caractères et le nom d'utilisateur au moins 2 caractères");
                 } else {
-                    MysqlConnect connect = new MysqlConnect();
                     try {
-                        connect.connect().prepareStatement("CREATE USER " + user + "@localhost IDENTIFIED BY '" + pass + "';").execute();
-                        connect.connect().prepareStatement("GRANT ALL PRIVILEGES ON pnr.* TO " + user + "@localhost;").execute();
+                        connect.getConnexion().prepareStatement("CREATE USER " + user + prefix + "@localhost IDENTIFIED BY '" + pass + "';").execute();
+                        connect.getConnexion().prepareStatement("GRANT " + role + " TO " + user + prefix + "@localhost;").execute();
+                        connect.getConnexion().prepareStatement("SET DEFAULT ROLE " + role + " TO " + user + prefix + "@localhost;").execute();
                         userList.getItems().add(user);
                         MFXNotificationSystem.instance()
                             .setPosition(NotificationPos.TOP_RIGHT)
@@ -97,7 +114,7 @@ public class UsersController implements Initializable {
                         userTextField.clear();
                         passTextField.clear();
                     } catch (SQLException e1) {
-                        // e1.printStackTrace();
+                        e1.printStackTrace();
                         System.err.println("User already exists");
                         MFXNotificationSystem.instance()
                             .setPosition(NotificationPos.TOP_RIGHT)

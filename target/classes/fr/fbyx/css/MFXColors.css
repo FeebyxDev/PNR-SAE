@@ -27,7 +27,10 @@
 	-mfx-yellow: #FFEA00;
 
 	-pnr-green: #17936d;
+	-pnr-headcolor: #17936d; /*#e7e7e7;*/
+	-pnr-headbtn: #111111;
 
+	-mfx-hidden: rgba(0, 0, 0, 0);
 
 	-mfx-text-he: rgba(0, 0, 0, 0.87); /* High Emphasis */
 	-mfx-text-me: rgba(0, 0, 0, 0.60); /* Medium Emphasis*/
@@ -35,4 +38,5 @@
 
 	-common-gradient: linear-gradient(to right bottom, #c4008b, #d00085, #dc007f, #e60b79, #ef1872, #f5276b, #fa3564, #fe415e, #ff5158, #ff5f52, #ff6c4e, #ff794b);
 	-secondary-gradient: linear-gradient(to right bottom, #1ec400, #00bd3a, #00b654, #00ae67, #00a574, #00a280, #009e8a, #009a91, #009b9d, #009ba8, #009bb2, #009abb);
+	-back-gradient: linear-gradient(to right bottom, #17936d, #1e9970, #249f72, #2ba475, #31aa77, #38b07a, #3eb67d, #4cc282, #52c784, #59cd87, #5fd389, #66d98c);
 }

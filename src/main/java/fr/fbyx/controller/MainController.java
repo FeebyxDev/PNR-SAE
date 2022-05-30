@@ -64,7 +64,7 @@ public class MainController implements Initializable {
 		loader.addView(MFXLoaderBean.of("SEARCH", App.loadURL("fxml/Search.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-search", "Recherche")).get());
 		loader.addView(MFXLoaderBean.of("NVOBS", App.loadURL("fxml/NvObs.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-plus", "Nouvelle Observation")).get());
 		loader.addView(MFXLoaderBean.of("SETTINGS", App.loadURL("fxml/Settings.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-sliders", "Paramètres")).get());
-		loader.addView(MFXLoaderBean.of("ADMIN", App.loadURL("fxml/Admin.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-lock", "Administration")).get());
+		if(App.isAdmin()) loader.addView(MFXLoaderBean.of("ADMIN", App.loadURL("fxml/Admin.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-lock", "Administration")).get());
 		loader.setOnLoadedAction(beans -> {
 			List<ToggleButton> nodes = beans.stream()
 					.map(bean -> {
@@ -83,7 +83,7 @@ public class MainController implements Initializable {
 
     private ToggleButton createToggle(String icon, String text) {
 		MFXIconWrapper wrapper = new MFXIconWrapper(icon, 24, 32);
-
+		wrapper.setStyle("-mfx-color: #ffffff;");
 		MFXRectangleToggleNode toggleNode = new MFXRectangleToggleNode(text, wrapper);
 		toggleNode.setAlignment(Pos.CENTER_LEFT);
 		toggleNode.setMaxWidth(Double.MAX_VALUE);

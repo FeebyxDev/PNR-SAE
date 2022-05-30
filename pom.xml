@@ -34,6 +34,21 @@
     <build>
         <plugins>
             <plugin>
+                <!-- Build an executable jar --> 
+                <groupId>org.apache.maven.plugins</groupId> 
+                <artifactId>maven-jar-plugin</artifactId> 
+                <version>3.1.0</version> 
+                <configuration> 
+                    <archive> 
+                        <manifest> 
+                            <addClasspath>true</addClasspath> 
+                            <classpathPrefix>lib/</classpathPrefix> 
+                            <mainClass>fr.fbyx.Launch</mainClass> 
+                        </manifest> 
+                    </archive>
+                </configuration> 
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
@@ -51,7 +66,7 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>fr.fbyx.App</mainClass>
+                            <mainClass>fr.fbyx.Launch</mainClass>
                         </configuration>
                     </execution>
                 </executions>

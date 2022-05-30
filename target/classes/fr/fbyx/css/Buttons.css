@@ -71,3 +71,11 @@
 .link-button .mfx-ripple-generator {
 	-mfx-ripple-color: #D9E9FF;
 }
+
+.medium-btn {
+	-fx-font-size: 20;
+	-fx-font-family: 'Visby Round CF Medium';
+	-fx-text-fill: -mfx-text-he;
+	-fx-pref-height: 40;
+	-fx-pref-width: 150;
+}

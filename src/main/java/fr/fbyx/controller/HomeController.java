@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import fr.fbyx.App;
+import fr.fbyx.ExportData;
 import fr.fbyx.Notification;
 import fr.fbyx.model.Animal;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -35,13 +36,14 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         searchButton.setOnMouseClicked(event -> {
-            VBox newVBox;
+            ExportData.export("SELECT * FROM Chouette");
+            /* VBox newVBox;
             try {
                 newVBox = FXMLLoader.load(App.loadURL("fxml/Search.fxml"));
                 App.getMainController().getContentPane().getChildren().setAll(newVBox);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            } */
         });
 
         insertButton.setOnMouseClicked(event -> {
