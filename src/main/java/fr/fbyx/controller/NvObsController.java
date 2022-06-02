@@ -8,28 +8,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fr.fbyx.App;
 import fr.fbyx.MysqlConnect;
-import fr.fbyx.model.Animal;
-import fr.fbyx.model.Model;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckListView;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.enums.FloatMode;
 import io.github.palexdev.materialfx.font.MFXFontIcon;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -55,6 +51,7 @@ public class NvObsController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		connect = App.getMysqlConncetion();
+		
 		
 
 		/**
@@ -125,13 +122,13 @@ public class NvObsController implements Initializable {
 				map[0].forEach((k, v) -> {
 					// System.out.println(k + " : " + v.toString());
 					MysqlConnect connect = App.getMysqlConncetion();
-					final String[] nbval = {"?"};
+					String nbval = "?";
 					for(int i = 1; i < ((ArrayList) v).size(); i++) {
-						nbval[0] += ", ?";
+						nbval += ", ?";
 					}
 					try {
 						// System.out.println("INSERT INTO ? VALUES (" + nbval[0] + ")");
-						PreparedStatement ps = connect.getConnexion().prepareStatement("INSERT INTO " + (String) k + " VALUES (" + nbval[0] + ");");
+						PreparedStatement ps = connect.getConnexion().prepareStatement("INSERT INTO " + (String) k + " VALUES (" + nbval + ");");
 						for(int j = 0; j < ((ArrayList) v).size(); j++) {
 							System.out.println(((ArrayList) v).get(j));
 							ps.setObject(j+1, ((ArrayList) v).get(j));
@@ -212,10 +209,6 @@ public class NvObsController implements Initializable {
 
 	}
 	
-	private Animal getCBItem() {
-        String animal = especeCombo.getSelectionModel().getSelectedItem();
-        return Model.especeAnimal.stream().filter(d -> d.getAnimalString().equals(animal)).findFirst().get();
-    }
 
 	private VBox createTable(String nomTable) {
 		VBox vb = new VBox();
@@ -236,20 +229,75 @@ public class NvObsController implements Initializable {
 		title.getChildren().addAll(remove, lb);
 		vb.getChildren().add(title);
 		ResultSet rs = null;
+
+		HashMap<String, ArrayList> fk = new HashMap<>();
 		try {
 			PreparedStatement statement = connect.getConnexion().prepareStatement("SELECT * FROM " + nomTable);
 			rs = statement.executeQuery();
+			// ResultSet rsfk = connect.getConnexion().getMetaData().getIndexInfo(connect.getConnexion().getCatalog(), null, nomTable, true, true);
+			
+			
+			/**
+			 * Request to get Check domain to fill the combobox
+			 */
+			ResultSet rsfk = connect.getConnexion().prepareStatement("SHOW CREATE TABLE " + nomTable).executeQuery();
+			
+
+			while (rsfk.next()) {
+				/* for(int i = 1; i <= rsfk.getMetaData().getColumnCount(); i++) {
+					System.out.println(i + " : " + rsfk.getMetaData().getColumnName(i) + " : " + rsfk.getString(i));
+				} */
+
+				String attrName = "";
+				ArrayList<String> doms = null;
+				String[] create = rsfk.getString(2).split("\n");
+				// System.out.println(Arrays.toString(create));
+
+				for (String s : create) {
+					if (s.contains("dom")) {
+						// System.out.println("Lines : " + s);
+
+						Pattern pat1 = Pattern.compile("[\\s\\S](?<!`(\\w+))");
+						Matcher mat1 = pat1.matcher(s.trim());
+						attrName = mat1.replaceAll("£").replaceAll("£+", "ø").replaceFirst("ø", "").split("ø")[1];
+
+						// System.out.println("AttrName : " + attrName);
+
+						Pattern pat2 = Pattern.compile("[\\s\\S](?<!'([A-zÀ-ú]+))");
+						Matcher mat2 = pat2.matcher(s.trim());
+						String s2 = mat2.replaceAll("£");
+						String s3 = s2.replaceAll("£+", "ø").replaceFirst("ø", "");
+						doms = new ArrayList<>(Arrays.asList(s3.split("ø")));
+
+						// System.out.println("Doms : " + doms.toString());
+						
+						fk.put(attrName, doms);
+					}
+				}
+
+				/* ArrayList<String> tmp = new ArrayList();
+				tmp.add(rsfk.getString("FKTABLE_NAME"));
+				tmp.add(rsfk.getString("PKCOLUMN_NAME")); */
+				
+			}
+		
+		// System.out.println(fk.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		vb.setSpacing(5);
+		vb.setSpacing(10);
 		vb.setStyle("-fx-background-color: #ffffff;");
 		vb.setPrefWidth(300);
 		vb.setLayoutX(10);
 		vb.setLayoutY(10);
 		try {
 			for(int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-				vb.getChildren().add(createAttr(rs.getMetaData().getColumnName(i+1), rs.getMetaData().getColumnTypeName(i+1)));
+				if(fk.containsKey(rs.getMetaData().getColumnName(i+1))){
+					vb.getChildren().add(createComboB(rs.getMetaData().getColumnName(i+1), rs.getMetaData().getColumnTypeName(i+1), fk));
+				} else {
+					vb.getChildren().add(createAttr(rs.getMetaData().getColumnName(i+1), rs.getMetaData().getColumnTypeName(i+1)));
+				}
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -270,6 +318,26 @@ public class NvObsController implements Initializable {
 		hb.getChildren().add(textf);
 		return hb;
 	}
+
+	private HBox createComboB(String attrName, String attrType, HashMap<String, ArrayList> fk) {
+		HBox hb = new HBox();
+		hb.setSpacing(7);
+		// hb.getChildren().add(new Label(attrName + " (" + attrType + ") : "));
+		hb.alignmentProperty().set(Pos.CENTER);
+
+		MFXComboBox<String> cb = new MFXComboBox<>();
+		cb.setMinWidth(300);
+		cb.floatModeProperty().set(FloatMode.BORDER);
+		cb.floatingTextProperty().set(attrName + " :" + attrType);
+		cb.getItems().addAll(fk.get(attrName));
+		fields.add(cb);
+		hb.getChildren().add(cb);
+
+
+		return hb;
+	}
+
+	
 
 
 
