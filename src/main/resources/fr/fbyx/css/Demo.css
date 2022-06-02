@@ -157,3 +157,11 @@
 	-fx-font-weight: bold;
 	-fx-background-radius: 5;
 }
+
+.addElem:hover {
+	-mfx-color: -pnr-green;
+}
+
+.rmElem:hover {
+	-mfx-color: -mfx-red;
+}

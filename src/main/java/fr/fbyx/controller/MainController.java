@@ -64,6 +64,7 @@ public class MainController implements Initializable {
 		loader.addView(MFXLoaderBean.of("SEARCH", App.loadURL("fxml/Search.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-search", "Recherche")).get());
 		loader.addView(MFXLoaderBean.of("NVOBS", App.loadURL("fxml/NvObs.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-plus", "Nouvelle Observation")).get());
 		loader.addView(MFXLoaderBean.of("SETTINGS", App.loadURL("fxml/Settings.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-sliders", "Paramètres")).get());
+		if(App.isAdmin()) loader.addView(MFXLoaderBean.of("NVTABLE", App.loadURL("fxml/NvTable.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-plus", "Nouvelle Table")).get());
 		if(App.isAdmin()) loader.addView(MFXLoaderBean.of("ADMIN", App.loadURL("fxml/Admin.fxml")).setBeanToNodeMapper(() -> createToggle("mfx-lock", "Administration")).get());
 		loader.setOnLoadedAction(beans -> {
 			List<ToggleButton> nodes = beans.stream()
