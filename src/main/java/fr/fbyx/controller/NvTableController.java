@@ -141,8 +141,58 @@ public class NvTableController implements Initializable {
 
 			if(isValid[0]) {
 				System.out.println("Tout est ok !");
-				System.out.println(attr[0].toString());
-				System.out.println(constarr[0].toString());
+				// System.out.println(attr[0].toString());
+				// System.out.println(constarr[0].toString());
+				String req = "CREATE TABLE " + nomTableField.getText() + " (";
+
+				final String[] attrList = {""};
+				final int[] j = {0};
+				attr[0].forEach((k, v) -> {				
+					attrList[0] += (String) k + " " + (String) v;
+					if(((String) v).equals("VARCHAR")) attrList[0] += "(200)";
+					// System.out.println(j[0] + "  " + attr[0].size());
+					if(j[0] < attr[0].size()-1) attrList[0] += ",";
+					j[0]++;
+				});
+
+				req += attrList[0];
+
+				/* for(int i = 0; i < attr[0].size(); i++) {
+					req += "? ?";
+					if(i < attr[0].size()-1) req += ",";
+				} */
+
+				if(constarr[0].size()>0) {
+					req += ",";
+
+					for(int i = 0; i < constarr[0].size(); i++) {
+						ArrayList<String> arr = ((ArrayList) constarr[0].get(i));
+						switch (arr.get(0)) {
+							case "PRIMARY KEY":
+								req += "CONSTRAINT pk_" + nomTableField.getText() + " PRIMARY KEY (" + arr.get(1) + ")";
+								break;
+							case "CHECK":
+								req += "CONSTRAINT ck_" + arr.get(1) + " CHECK (" + arr.get(1) + " " + arr.get(2) + ")";
+								break;
+							case "FOREIGN KEY":
+								req += "CONSTRAINT fk_" + nomTableField.getText() + "_" + arr.get(2) + "_" + arr.get(1) + " FOREIGN KEY (" + arr.get(1) + ") REFERENCES " + arr.get(2)+ '(' +arr.get(3) + ')';
+							default:
+								break;
+						}
+						if(i < constarr[0].size()-1) req += ",";
+					}
+
+				}
+
+				req += ");";
+
+				try {
+					PreparedStatement ps = connect.getConnexion().prepareStatement(req);
+					System.out.println(ps.toString());
+					ps.executeUpdate();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 
 				// System.out.println(map[0].toString());
 				/* map[0].forEach((k, v) -> {

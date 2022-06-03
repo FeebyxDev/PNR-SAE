@@ -196,7 +196,7 @@ public class NvObsController implements Initializable {
 			PreparedStatement ps = connect.getConnexion().prepareStatement("SELECT * FROM Observateur");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				obser.add((rs.getString("nom")==null?"":rs.getString("nom")) + " " + rs.getString("prenom"));
+				obser.add((rs.getString("nom")==null?"":(rs.getString("nom") + " ")) + rs.getString("prenom"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
