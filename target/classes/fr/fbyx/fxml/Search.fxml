@@ -42,7 +42,7 @@
                   </MFXFilterComboBox>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0">
+            <HBox fx:id="mainTableBox" alignment="CENTER" prefHeight="0.0" prefWidth="0.0">
                <children>
                   <MFXTableView fx:id="table" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" />
                </children>
