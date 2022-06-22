@@ -76,6 +76,37 @@
 	-fx-font-size: 20;
 	-fx-font-family: 'Visby Round CF Medium';
 	-fx-text-fill: -mfx-text-he;
+	-fx-cursor: hand;
 	-fx-pref-height: 40;
 	-fx-pref-width: 150;
+}
+
+.addBtn {
+	-fx-background-color: -pnr-green;
+	-fx-border-color: -mfx-hidden;
+	-fx-text-fill: white;
+	-fx-pref-height: 40;
+	-fx-pref-width: 150;
+}
+
+.rmBtn {
+	-fx-background-color: -mfx-red;
+	-fx-border-color: -mfx-hidden;
+	-fx-text-fill: white;
+	-fx-pref-height: 40;
+	-fx-pref-width: 150;
+}
+
+.modBtn {
+	-fx-background-color: -mfx-orange;
+	-fx-border-color: -mfx-hidden;
+	-fx-text-fill: white;
+	-fx-pref-height: 40;
+	-fx-pref-width: 150;
+}
+
+.disabled {
+	-fx-background-color: -mfx-charcoal;
+	-fx-text-fill: -mfx-text-he;
+	-fx-cursor: not-allowed;
 }

@@ -31,10 +31,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class NvTableController implements Initializable {
+public class NvVueController implements Initializable {
 
 	private MysqlConnect connect;
+	private ArrayList<String> attrMain;
+	private ArrayList<String> attrJoin = new ArrayList<>();
+	
 
+	@FXML
+	private MFXFilterComboBox<String> comboTable;
 
 	@FXML
 	private MFXButton validerBtn;
@@ -58,9 +63,35 @@ public class NvTableController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		connect = App.getMysqlConncetion();
+
+		try {
+			PreparedStatement ps = connect.getConnexion().prepareStatement("SHOW TABLES WHERE Tables_in_pnr NOT LIKE 'vue%';");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				comboTable.getItems().add(rs.getString("Tables_in_pnr"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+
+		comboTable.setOnAction(e -> {
+			//if(comboTable.getSelectedItem() != null && !comboTable.getSelectedItem().isEmpty()) {
+				attrMain = new ArrayList<>();
+				try {
+					PreparedStatement ps = connect.getConnexion().prepareStatement("SELECT * FROM " + comboTable.getSelectedItem() + ";");
+					ResultSet rs = ps.executeQuery();
+					for(int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+						attrMain.add(rs.getMetaData().getColumnName(i));
+					}
+				} catch (SQLException er) {
+					er.printStackTrace();
+				}
+			//}
+		});
 		
 		addAttr.setOnMouseClicked(e -> {
-			attrBox.getChildren().add(createAttr());
+			attrBox.getChildren().add(joinTable());
 		});
 
 		addConst.setOnMouseClicked(e -> {
@@ -244,33 +275,96 @@ public class NvTableController implements Initializable {
 
 	}
 
-	private HBox createAttr() {
+	private HBox joinTable() {
 		HBox hb = new HBox();
 		hb.setSpacing(7);
 		hb.alignmentProperty().set(Pos.CENTER);
 
+		MFXComboBox tableToJoin = new MFXComboBox();
+		tableToJoin.setMinWidth(150);
+		tableToJoin.floatModeProperty().set(FloatMode.BORDER);
+		tableToJoin.floatingTextProperty().set("Table à joindre");
+		
+		try {
+			PreparedStatement ps = connect.getConnexion().prepareStatement("SHOW TABLES WHERE Tables_in_pnr NOT LIKE 'vue%';");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				if(!rs.getString("Tables_in_pnr").equals(comboTable.getSelectedItem())) {
+					tableToJoin.getItems().add(rs.getString("Tables_in_pnr"));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-		MFXTextField textName = new MFXTextField();
-		textName.setMinWidth(150);
-		textName.floatModeProperty().set(FloatMode.BORDER);
-		textName.floatingTextProperty().set("Nom de l'attribut");
+		tableToJoin.setOnAction(e -> {
+			try {
 
-		MFXComboBox attrType = new MFXComboBox();
-		attrType.setMinWidth(150);
-		attrType.floatModeProperty().set(FloatMode.BORDER);
-		attrType.floatingTextProperty().set("Type de l'attribut");
-		attrType.getItems().addAll("INT", "VARCHAR", "DECIMAL", "DATE");
+				MFXFilterComboBox<String> joinAttr = new MFXFilterComboBox<>();
+				joinAttr.setMinWidth(150);
+				joinAttr.floatModeProperty().set(FloatMode.BORDER);
+				joinAttr.floatingTextProperty().set("Attribut 1");
+
+				MFXFilterComboBox<String> joinAttr2 = new MFXFilterComboBox<>();
+				joinAttr2.setMinWidth(150);
+				joinAttr2.floatModeProperty().set(FloatMode.BORDER);
+				joinAttr2.floatingTextProperty().set("Attribut 2");
+
+				joinAttr2.getItems().addAll(attrMain);
+				joinAttr2.getItems().addAll(attrJoin);
+
+
+				PreparedStatement ps = connect.getConnexion().prepareStatement("SELECT * FROM " + tableToJoin.getSelectedItem() + ";");
+				ResultSet rs = ps.executeQuery();
+				for(int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+					joinAttr.getItems().add(rs.getMetaData().getColumnName(i));
+					attrJoin.add(rs.getMetaData().getColumnName(i));
+				}
+
+
+
+				hb.getChildren().add(hb.getChildren().size()-1, joinAttr);
+				hb.getChildren().add(hb.getChildren().size()-1, joinAttr2);
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		});
+
 
 		MFXFontIcon close = new MFXFontIcon("mfx-delete-alt");
 		close.setSize(20);
 		close.getStyleClass().add("rmElem");
 		close.cursorProperty().set(Cursor.OPEN_HAND);
 		close.setOnMouseClicked(e -> {
-			attrBox.getChildren().remove(hb);
-		});
+			try {
+				PreparedStatement ps = connect.getConnexion().prepareStatement("SELECT * FROM " + tableToJoin.getSelectedItem() + ";");
+				ResultSet rs = ps.executeQuery();
+				for(int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+					attrJoin.remove(rs.getMetaData().getColumnName(i));
+				}
+			} catch (SQLException er) {
+				er.printStackTrace();
+			}
 
-		hb.getChildren().add(textName);
-		hb.getChildren().add(attrType);
+			int index = attrBox.getChildren().indexOf(hb);
+			for (int i = attrBox.getChildren().indexOf(hb); i <= attrBox.getChildren().size(); i++) {
+				HBox hbTmp = (HBox) attrBox.getChildren().get(index);
+				try {
+					String tb = ((MFXComboBox<String>) ((hbTmp).getChildren().get(0))).getSelectedItem();
+					PreparedStatement ps = connect.getConnexion().prepareStatement("SELECT * FROM " + tb + ";");
+					ResultSet rs = ps.executeQuery();
+					for(int j = 1; j <= rs.getMetaData().getColumnCount(); j++) {
+						attrJoin.remove(rs.getMetaData().getColumnName(j));
+					}
+				} catch (SQLException er) {
+					er.printStackTrace();
+				}
+				attrBox.getChildren().remove(index);
+			}
+			// attrBox.getChildren().remove(hb);
+		});
+		hb.getChildren().add(tableToJoin);
 		hb.getChildren().add(close);
 		return hb;
 	}
@@ -336,7 +430,7 @@ public class NvTableController implements Initializable {
 					fcb.floatModeProperty().set(FloatMode.BORDER);
 					fcb.floatingTextProperty().set("Table ciblée");
 					try {
-						PreparedStatement ps = connect.getConnexion().prepareStatement("SHOW TABLES WHERE Tables_in_pnr NOT LIKE 'vue_%';");
+						PreparedStatement ps = connect.getConnexion().prepareStatement("SHOW TABLES WHERE Tables_in_pnr NOT LIKE 'vue%';");
 						ResultSet rs = ps.executeQuery();
 						while (rs.next()) {
 							fcb.getItems().add(rs.getString("Tables_in_pnr"));

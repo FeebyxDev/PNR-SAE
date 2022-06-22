@@ -9,5 +9,6 @@
         <module name="pnr" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="17" />
   </component>
 </project>

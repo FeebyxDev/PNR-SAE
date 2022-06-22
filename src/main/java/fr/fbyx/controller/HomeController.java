@@ -24,37 +24,11 @@ import javafx.scene.layout.VBox;
 public class HomeController implements Initializable {
     
     @FXML
-    private MFXButton searchButton;
-
-    @FXML
-    private MFXButton insertButton;
-
-    @FXML
 	private StackPane contentPane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        searchButton.setOnMouseClicked(event -> {
-            ExportData.export("SELECT * FROM Chouette");
-            /* VBox newVBox;
-            try {
-                newVBox = FXMLLoader.load(App.loadURL("fxml/Search.fxml"));
-                App.getMainController().getContentPane().getChildren().setAll(newVBox);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } */
-        });
-
-        insertButton.setOnMouseClicked(event -> {
-            VBox newVBox;
-            try {
-                newVBox = FXMLLoader.load(App.loadURL("fxml/NvObs.fxml"));
-                App.getMainController().getContentPane().getChildren().setAll(newVBox);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        
     }    
 
 }

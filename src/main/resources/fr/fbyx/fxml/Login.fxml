@@ -14,10 +14,18 @@
 
 <VBox alignment="CENTER" style="-fx-background-color: -mfx-hidden;" styleClass="font-fam" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.fbyx.controller.LoginController">
    <children>
+      <Label styleClass="font-fam" text="Degemer mat war arload ag ar Park Natur Rannvroel ar Mor Bihan">
+         <font>
+            <Font name="Roboto Medium" size="25.0" />
+         </font>
+      </Label>
       <Label styleClass="font-fam" text="Bienvenue sur l'application de gestion des données du PNR">
          <font>
             <Font name="Roboto Medium" size="25.0" />
          </font>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
       </Label>
       <Label styleClass="font-fam" text="Connectez-vous pour consulter et ajouter des données !">
          <font>

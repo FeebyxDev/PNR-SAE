@@ -30,8 +30,8 @@ public class App extends Application {
     public static App rootapp;
     private static boolean isAdmin = false;
     
-    public static void main(String[] args) {
-        launch(args);
+    public static void launApp() {
+        launch();
     }
 
     @Override

@@ -52,8 +52,6 @@ public class NvObsController implements Initializable {
 
 		connect = App.getMysqlConncetion();
 		
-		
-
 		/**
 		 * Set up bouton valider
 		 */
@@ -153,7 +151,7 @@ public class NvObsController implements Initializable {
 		 * Set up des Especes
 		 */
 		try {
-			PreparedStatement ps = connect.getConnexion().prepareStatement("SHOW TABLES WHERE Tables_in_pnr NOT LIKE 'vue_%';");
+			PreparedStatement ps = connect.getConnexion().prepareStatement("SHOW TABLES WHERE Tables_in_pnr NOT LIKE 'vue%';");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				especeCombo.getItems().add(rs.getString("Tables_in_pnr"));
@@ -263,7 +261,7 @@ public class NvObsController implements Initializable {
 
 						// System.out.println("AttrName : " + attrName);
 
-						Pattern pat2 = Pattern.compile("[\\s\\S](?<!'([A-zÀ-ú]+))");
+						Pattern pat2 = Pattern.compile("[\\s\\S](?<!'([A-zÀ-ú ]+))");
 						Matcher mat2 = pat2.matcher(s.trim());
 						String s2 = mat2.replaceAll("£");
 						String s3 = s2.replaceAll("£+", "ø").replaceFirst("ø", "");

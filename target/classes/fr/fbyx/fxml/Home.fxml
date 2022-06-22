@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:controller="fr.fbyx.controller.HomeController" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1028.0" stylesheets="@../css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1028.0" stylesheets="@../css/Buttons.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.fbyx.controller.HomeController">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
@@ -14,26 +13,21 @@
       <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
    </padding>
    <children>
+      <Label text="Degemer mat war arload ag ar Park Natur Rannvroel ar Mor Bihan" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+         <font>
+            <Font name="Roboto Medium" size="25.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Label>
       <Label text="Bienvenue sur l'application de gestion des données du PNR" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
          <font>
             <Font name="Roboto Medium" size="25.0" />
          </font>
          <VBox.margin>
-            <Insets top="130.0" />
+            <Insets top="10.0" />
          </VBox.margin>
       </Label>
-      <MFXButton fx:id="searchButton" styleClass="outline-button" text="Recherche de données" textAlignment="CENTER">
-         <VBox.margin>
-            <Insets bottom="20.0" top="50.0" />
-         </VBox.margin>
-         <padding>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-         </padding>
-      </MFXButton>
-      <MFXButton fx:id="insertButton" styleClass="outline-button" text="Insertion de données" textAlignment="CENTER">
-         <padding>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-         </padding>
-      </MFXButton>
    </children>
 </VBox>
