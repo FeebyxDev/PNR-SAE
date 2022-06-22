@@ -300,9 +300,8 @@ public class SearchController implements Initializable {
         hboxTb.setAlignment(Pos.CENTER);
 
         MFXButton removeBtn = new MFXButton("Supprimer");
-        removeBtn.getStyleClass().setAll("rmBtn", "medium-btn", "mfx-button");
+        removeBtn.getStyleClass().setAll("rmBtn", "medium-btn", "mfx-button", "disabled");
         removeBtn.setDisable(true);
-        removeBtn.getStyleClass().add("disabled");
 
         removeBtn.setOnAction(event -> {
             List<ObservableList> selectedval = tb.getSelectionModel().getSelectedValues();
@@ -328,10 +327,34 @@ public class SearchController implements Initializable {
         });
 
         MFXButton modifyBtn = new MFXButton("Modifier");
-        modifyBtn.getStyleClass().setAll("modBtn", "medium-btn", "mfx-button");
+        modifyBtn.getStyleClass().setAll("modBtn", "medium-btn", "mfx-button", "disabled");
 
         modifyBtn.setOnAction(event -> {
-            
+             // System.out.println(allTables.toString());
+            // allTables.get(strtable);
+            try {
+                ArrayList<String> doNotModify = new ArrayList<>();
+                ResultSet rs = connect.getConnexion().getMetaData().getPrimaryKeys(null, null, strtable);
+                System.out.println("TESTTTTTTT");
+                while(rs.next()) {
+                    /* System.out.println(rs.getString("COLUMN_NAME"));
+                    for (int i = 0; i < rs.getFetchSize(); i++) {
+                        System.out.println(rs.getString(i));
+                    } */
+                    doNotModify.add(rs.getString("COLUMN_NAME"));
+                }
+
+                HashMap<String, String> tmp = new HashMap<>();
+                for (int i = 0; i < tb.getSelectionModel().getSelectedValues().get(0).size(); i++) {
+                    if(!tmp.containsKey(tb.getTableColumns().get(i).getText())) {
+                        tmp.put(tb.getTableColumns().get(i).getText(), (String) tb.getSelectionModel().getSelectedValues().get(0).get(i));
+                    }
+                }
+                if(mainTableBox.getChildren().size() > 1) mainTableBox.getChildren().remove(1);
+                mainTableBox.getChildren().add(createTableFields(strtable, tmp, doNotModify, false));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         MFXButton addBtn = new MFXButton("Ajouter");
@@ -341,8 +364,9 @@ public class SearchController implements Initializable {
             // System.out.println(allTables.toString());
             // allTables.get(strtable);
             try {
-                ResultSet rs = connect.getConnexion().getMetaData().getImportedKeys(connect.getConnexion().getCatalog(), null, "Obs_Chouette");
+                ResultSet rs = connect.getConnexion().getMetaData().getImportedKeys(connect.getConnexion().getCatalog(), null, strtable);
                 HashMap<String, String> tmp = new HashMap<>();
+                ArrayList<String> doNotModify = new ArrayList<>();
                 while(rs.next()) {
                     System.out.println(rs.getString("FKTABLE_NAME") + " : " + rs.getString("FKCOLUMN_NAME") + " : " + rs.getString("PKTABLE_NAME") + " : " + rs.getString("PKCOLUMN_NAME"));
                     MFXTableView tbfk = allTables.get(rs.getString("PKTABLE_NAME"));
@@ -358,10 +382,11 @@ public class SearchController implements Initializable {
                         }).findFirst().get());
                         String val = ((ObservableList<String>) tbfk.getSelectionModel().getSelectedValues().get(0)).get(index);
                         tmp.put(rs.getString("FKCOLUMN_NAME"), val);
+                        doNotModify.add(rs.getString("FKCOLUMN_NAME"));
                     }
                 }
                 if(mainTableBox.getChildren().size() > 1) mainTableBox.getChildren().remove(1);
-                mainTableBox.getChildren().add(createTableFields(strtable, tmp, true));
+                mainTableBox.getChildren().add(createTableFields(strtable, tmp, doNotModify, true));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -381,6 +406,18 @@ public class SearchController implements Initializable {
 
         tb.getSelectionModel().selectionProperty().addListener((MapChangeListener<? super Integer, ? super ObservableList>) change -> {
             
+            if(tb.getSelectionModel().getSelectedValues().get(0) == null || tb.getSelectionModel().getSelectedValues().size() < 1) {
+                removeBtn.setDisable(true);
+                removeBtn.getStyleClass().add("disabled");
+                modifyBtn.setDisable(true);
+                modifyBtn.getStyleClass().add("disabled");
+            } else {
+                removeBtn.setDisable(false);
+                removeBtn.getStyleClass().remove("disabled");
+                modifyBtn.setDisable(false);
+                modifyBtn.getStyleClass().remove("disabled");
+            }
+
             if(tb.getSelectionModel().getSelectedValues().size()>1) {
                 modifyBtn.setDisable(true);
                 modifyBtn.getStyleClass().add("disabled");
@@ -389,13 +426,6 @@ public class SearchController implements Initializable {
                 modifyBtn.getStyleClass().remove("disabled");
             }
 
-            if(tb.getSelectionModel().getSelectedValues().get(0) == null || tb.getSelectionModel().getSelectedValues().size() < 1) {
-                removeBtn.setDisable(true);
-                removeBtn.getStyleClass().add("disabled");
-            } else {
-                removeBtn.setDisable(false);
-                removeBtn.getStyleClass().remove("disabled");
-            }
             if(change.getValueAdded() != null) {
                 
             }
@@ -491,7 +521,8 @@ public class SearchController implements Initializable {
 
 
 
-    private VBox createTableFields(String nomTable, HashMap<String, String> data, boolean isNew) {
+    private VBox createTableFields(String nomTable, HashMap<String, String> data, ArrayList<String> doNotModify, boolean isNew) {
+
 		VBox vb = new VBox();
 		Label lb = new Label(nomTable);
 		
@@ -576,10 +607,10 @@ public class SearchController implements Initializable {
 			for(int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
                 String content = "";
                 boolean disabled = false;
-                if(data.get(rs.getMetaData().getColumnName(i+1)) != null) {
-                    content = data.get(rs.getMetaData().getColumnName(i+1));
-                    disabled = true;
-                }
+                if(data.get(rs.getMetaData().getColumnName(i+1)) != null) content = data.get(rs.getMetaData().getColumnName(i+1));
+                // System.out.println(doNotModify.toString());
+                if(doNotModify.contains(rs.getMetaData().getColumnName(i+1))) disabled = true;
+
 				if(fk.containsKey(rs.getMetaData().getColumnName(i+1))){
 					vb.getChildren().add(createComboB(rs.getMetaData().getColumnName(i+1), rs.getMetaData().getColumnTypeName(i+1), fk, content, disabled));
 				} else {
@@ -589,10 +620,16 @@ public class SearchController implements Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+        MFXButton validerBtn;
+        if(isNew)  validerBtn = new MFXButton("Ajouter");
+        else validerBtn = new MFXButton("Enregister");
 
-        MFXButton validerBtn = new MFXButton("Ajouter");
         validerBtn.getStyleClass().setAll("addBtn", "medium-btn", "mfx-button");
         vb.getChildren().add(validerBtn);
+        vb.setAlignment(Pos.CENTER);
+
+        
+        final MFXTableView[] tbex = {allTables.get(nomTable)};
 
         validerBtn.setOnAction(e -> {
 			// System.out.println("Valider");
@@ -650,6 +687,7 @@ public class SearchController implements Initializable {
 					
 				});
 				// System.out.println(table[0] + " : " + values[0].toString());
+                map[0].clear();
 				map[0].put(table[0], values[0]);
 			});
 
@@ -659,28 +697,74 @@ public class SearchController implements Initializable {
 				map[0].forEach((k, v) -> {
 					// System.out.println(k + " : " + v.toString());
 					MysqlConnect connect = App.getMysqlConncetion();
-					String nbval = "?";
-					for(int i = 1; i < ((ArrayList) v).size(); i++) {
-						nbval += ", ?";
-					}
-					try {
-						System.out.println("INSERT INTO ? VALUES (" + nbval + ")");
-						PreparedStatement ps = connect.getConnexion().prepareStatement("INSERT INTO " + (String) k + " VALUES (" + nbval + ");");
-						for(int j = 0; j < ((ArrayList) v).size(); j++) {
-							System.out.println(((ArrayList) v).get(j));
-							ps.setObject(j+1, ((ArrayList) v).get(j));
-						}
-						
-						ps.executeUpdate();
-                        ObservableList row = FXCollections.observableArrayList();
-                        ((ArrayList) v).forEach(val -> {
-                            row.add(val.toString());
-                        });
-                        this.childTables.get((String) k).getItems().add(row);
-                        this.mainTableBox.getChildren().remove(vb);
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+                    if(isNew) {
+                        String nbval = "?";
+                        for(int i = 1; i < ((ArrayList) v).size(); i++) {
+                            nbval += ", ?";
+                        }
+                        try {
+                            // System.out.println("INSERT INTO ? VALUES (" + nbval + ")");
+                            PreparedStatement ps = connect.getConnexion().prepareStatement("INSERT INTO " + (String) k + " VALUES (" + nbval + ");");
+                            for(int j = 0; j < ((ArrayList) v).size(); j++) {
+                                System.out.println(((ArrayList) v).get(j));
+                                ps.setObject(j+1, ((ArrayList) v).get(j));
+                            }
+                            
+                            ps.executeUpdate();
+                            ObservableList row = FXCollections.observableArrayList();
+                            ((ArrayList) v).forEach(val -> {
+                                row.add(val.toString());
+                            });
+                            this.childTables.get((String) k).getItems().add(row);
+                            this.mainTableBox.getChildren().remove(vb);
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            String request = "UPDATE " + (String) k + " SET ";
+                            String pk = "";
+                            ResultSet rs2 = connect.getConnexion().getMetaData().getPrimaryKeys(connect.getConnexion().getCatalog(), null, (String) k);
+                            while(rs2.next()) {
+                                pk = rs2.getString("COLUMN_NAME");
+                            }
+                            int indexpk = 0;
+                            for(int i = 0; i < ((ArrayList) v).size(); i++) {
+                                String nomCol = ((MFXTableColumn) tbex[0].getTableColumns().get(i)).getText();
+                                if(!pk.equals(nomCol)) {
+                                    if(i == 0) {
+                                        request += nomCol;
+                                    } else {
+                                        request += ", " + nomCol;
+                                    }
+                                    request += " = ?";
+                                } else {
+                                    indexpk = i;
+                                }
+                            }
+                            request += " WHERE " + pk + " = ?;";
+                            System.out.println(request);
+                            PreparedStatement ps3 = connect.getConnexion().prepareStatement(request);
+                            int h = 1;
+                            // System.out.println("index pk : " + indexpk);
+                            for(int j = 0; j < ((ArrayList) v).size(); j++) {
+                                System.out.println("J = " + j);
+                                if(j != indexpk) {
+                                    System.out.println(((ArrayList) v).get(j));
+                                    ps3.setObject(h, ((ArrayList) v).get(j));
+                                    h++;
+                                }
+                            }
+
+                            // System.out.println(((ArrayList) v).toString());
+                            // System.out.println(h + " : " + ((ArrayList) v).get(indexpk));
+                            ps3.setObject(h, ((ArrayList) v).get(indexpk));
+
+                            ps3.executeUpdate();
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
 
 				});
 			} else {

@@ -106,7 +106,7 @@
 }
 
 .disabled {
-	-fx-background-color: -mfx-charcoal;
+	-fx-background-color: -mfx-light-grey;
 	-fx-text-fill: -mfx-text-he;
 	-fx-cursor: not-allowed;
 }
